@@ -23,6 +23,33 @@ android {
         buildConfig true
         aidl true
     }
+
+
+    tasks.register('copyRelease', Copy) {
+        dependsOn 'deleteServer'
+        from file('build/outputs/apk/release/server-release-unsigned.apk')
+        into file("$project.rootDir/client/src/main/assets")
+        rename('server-release-unsigned.apk', 'scrcpy-server.jar')
+    }
+
+    tasks.register('deleteServer', Delete) {
+        delete "$project.rootDir/client/src/main/assets/scrcpy-server.jar"
+    }
+
+    tasks.register('copyDebug', Copy) {
+        dependsOn 'deleteServer'
+        from file("build/outputs/apk/debug/server-debug.apk")
+        into file("$project.rootDir/client/src/main/assets/")
+        rename('server-debug.apk', 'scrcpy-server.jar')
+    }
+
+    afterEvaluate {
+        packageRelease.finalizedBy(copyRelease)
+    }
+
+    afterEvaluate {
+        packageDebug.finalizedBy(copyDebug)
+    }
 }
 
 dependencies {
