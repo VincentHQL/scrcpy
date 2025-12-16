@@ -14,6 +14,9 @@ import com.genymobile.scrcpy.device.DesktopConnection;
 import com.genymobile.scrcpy.device.Device;
 import com.genymobile.scrcpy.device.NewDisplay;
 import com.genymobile.scrcpy.device.Streamer;
+import com.genymobile.scrcpy.monitor.MonitorServer;
+import com.genymobile.scrcpy.monitor.Router;
+import com.genymobile.scrcpy.monitor.RouterSetup;
 import com.genymobile.scrcpy.opengl.OpenGLRunner;
 import com.genymobile.scrcpy.util.Ln;
 import com.genymobile.scrcpy.util.LogUtils;
@@ -160,9 +163,7 @@ public final class Server {
 
             Completion completion = new Completion(asyncProcessors.size());
             for (AsyncProcessor asyncProcessor : asyncProcessors) {
-                asyncProcessor.start((fatalError) -> {
-                    completion.addCompleted(fatalError);
-                });
+                asyncProcessor.start(completion::addCompleted);
             }
 
             Looper.loop(); // interrupted by the Completion implementation
@@ -260,6 +261,15 @@ public final class Server {
                 Ln.i(LogUtils.buildAppListMessage());
             }
             // Just print the requested data, do not mirror
+            return;
+        }
+
+        if (options.getMonitor()) {
+            try {
+                // TODO: run the monitor server
+            } catch (Exception e) {
+                
+            }
             return;
         }
 

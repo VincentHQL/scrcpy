@@ -80,6 +80,8 @@ public class Options {
     private boolean sendDummyByte = true; // write a byte on start to detect connection issues
     private boolean sendCodecMeta = true; // write the codec metadata before the stream
 
+    private boolean monitor = false;
+
     public Ln.Level getLogLevel() {
         return logLevel;
     }
@@ -286,6 +288,10 @@ public class Options {
 
     public boolean getSendCodecMeta() {
         return sendCodecMeta;
+    }
+
+    public boolean getMonitor() {
+        return monitor;
     }
 
     @SuppressWarnings("MethodLength")
@@ -511,6 +517,9 @@ public class Options {
                         options.sendDummyByte = false;
                         options.sendCodecMeta = false;
                     }
+                    break;
+                case "monitor":
+                    options.monitor = Boolean.parseBoolean(value);
                     break;
                 default:
                     Ln.w("Unknown server option: " + key);
